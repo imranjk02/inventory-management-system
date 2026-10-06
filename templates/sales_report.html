@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetTech - Sales Report</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/dashboard" class="brand-link"><h2>NetTech</h2></a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/courses">Courses</a>
+        <a href="/trainers">Trainers</a>
+        <a href="/sales">Sales</a>
+        <a href="/sales-report" class="active">Reports</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <h2>Sales Report</h2>
+            <div class="topbar-right">
+                <button id="darkModeBtn" class="dark-mode-btn" type="button">🌙</button>
+                <span>Welcome, {{ username }}</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="page-heading">
+                <div><h1>Sales Report</h1><p>Overview of course sales.</p></div>
+                <a href="/download-sales-excel" class="download-excel-btn">📊 Download Excel</a>
+            </div>
+
+            <div class="report-cards">
+                <div class="report-card">
+                    <span class="report-label">TOTAL SALES</span>
+                    <h2>₹{{ "%.2f"|format(total_sales) }}</h2>
+                    <p>Total revenue</p>
+                </div>
+                <div class="report-card">
+                    <span class="report-label">TOTAL ENROLLMENTS</span>
+                    <h2>{{ total_enrollments }}</h2>
+                    <p>Course enrollments</p>
+                </div>
+                <div class="report-card">
+                    <span class="report-label">AVERAGE SALE</span>
+                    <h2>₹{{ "%.2f"|format(average_sale) }}</h2>
+                    <p>Average enrollment value </p>
+                </div>
+            </div>
+
+            <div class="report-table-container">
+                <h2>Sales Summary</h2>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>COURSE</th>
+                                <th>ENROLLMENTS</th>
+                                <th>TOTAL REVENUE</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales_summary %}
+                            <tr>
+                                <td>{{ sale.course }}</td>
+                                <td>{{ sale.enrollments }}</td>
+                                <td>₹{{ "%.2f"|format(sale.total_revenue) }}</td>
+                            </tr>
+                            {% else %}
+                            <tr><td colspan="3" style="text-align: center;">No sales data found.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

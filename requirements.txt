@@ -1,0 +1,6 @@
+Flask
+mysql-connector-python
+python-dotenv
+openpyxl
+python-barcode
+Pillow

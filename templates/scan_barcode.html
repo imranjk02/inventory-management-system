@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan Barcode - NetTech</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"  rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        body {
+            background: #f5f6fa;
+            font-family: Arial, sans-serif;
+        }
+
+        .scan-box {
+            max-width: 550px;
+            margin: 60px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .description {
+            text-align: center;
+            color: #777;
+            margin-bottom: 25px;
+        }
+
+        #reader {
+            width: 100%;
+        }
+
+        .back-btn {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="scan-box">
+        <h2>📷 Scan Course Barcode</h2>
+        <p class="description">Point your camera at a course barcode.</p>
+        <div id="reader"></div>
+        <div class="text-center">
+            <a href="/courses" class="btn btn-secondary back-btn">← Back to Courses</a>
+        </div>
+    </div>
+</div>
+<script>
+function onScanSuccess(decodedText, decodedResult) {
+    console.log("Barcode detected:", decodedText);
+    const courseId = parseInt(decodedText.trim());
+
+    if (!isNaN(courseId)) {
+        window.location.href = "/scan-course/" + courseId;
+    } else {
+        alert("Invalid course barcode: " + decodedText);
+    }
+}
+
+function onScanFailure(error) {}
+const config = {fps: 10, qrbox: { width: 400,height: 200},formatsToSupport: [ Html5QrcodeSupportedFormats.CODE_128]};
+const scanner = new Html5QrcodeScanner("reader", config, false);
+scanner.render(onScanSuccess, onScanFailure);
+</script>
+</body>
+</html>

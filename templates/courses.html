@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetTech - Courses</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/dashboard" class="brand-link"><h2>NetTech</h2></a>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/courses" class="active">Courses</a>
+        <a href="/trainers">Trainers</a>
+        <a href="/sales">Sales</a>
+        <a href="/sales-report">Reports</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="main">
+        <div class="topbar">
+            <h2>Courses</h2>
+            <div class="topbar-right">
+                <button id="darkModeBtn" class="dark-mode-btn">🌙</button>
+                <span>Welcome, {{ username }}</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="page-heading">
+                <div>
+                    <h1>Courses</h1>
+                    <p>Manage NetTech training courses</p>
+                </div>
+                <a href="/scan-barcode" class="btn btn-success">📷 Scan Barcode</a>
+                <a href="/add-course" class="btn btn-primary">+ Add Course</a>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <input type="text" id="courseSearch" class="form-control" placeholder="Search courses...">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="table-responsive">
+                    <table class="table" id="coursesTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>COURSE</th>
+                                <th>CATEGORY</th>
+                                <th>TRAINER</th>
+                                <th>PRICE</th>
+                                <th>SEATS</th>
+                                <th>BARCODE</th>
+                                <th>ACTION</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for course in courses %}
+                            <tr>
+                                <td>{{ course.id }}</td>
+                                <td>{{ course.name }}</td>
+                                <td>{{ course.category }}</td>
+                                <td>{{ course.trainer }}</td>
+                                <td>₹{{ "%.2f"|format(course.price) }}</td>
+                                <td>{{ course.seats }}</td>
+                                <td class="barcode-cell">
+                                    {% set barcode_file = 'barcodes/course_' ~ course.id ~ '.png' %}
+                                    <img src="{{ url_for('static', filename=barcode_file) }}" alt="Barcode" class="course-barcode" onerror="this.style.display='none';">
+                                    <div class="barcode-actions">
+                                        <a href="{{ url_for('generate_barcode', course_id=course.id) }}" class="barcode-btn">Generate</a>
+                                        <a href="{{ url_for('static', filename=barcode_file) }}" download="course_{{ course.id }}_barcode.png" class="barcode-btn">Download</a>
+                                        <button type="button" class="barcode-btn print-barcode-btn" data-barcode-url="{{ url_for('static', filename=barcode_file) }}">Print</button>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('edit_course', course_id=course.id) }}" class="btn btn-primary">Edit</a>
+                                    <a href="{{ url_for('delete_course', course_id=course.id) }}" class="btn btn-danger"
+                                        onclick="return confirm('Are you sure you want to delete this course?');">Delete
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
